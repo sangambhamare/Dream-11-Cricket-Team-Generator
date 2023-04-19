@@ -24,4 +24,4 @@ def generate_intro(project_name):
 if project_name:
     intro = generate_intro(project_name)
     st.header("Introduction")
-    st.write(intro, f"<p style='text-align: justify'>{text}</p>", unsafe_allow_html=True)
+    st.write(intro, <p style='text-align: justify'>{text}</p>, unsafe_allow_html=True)
