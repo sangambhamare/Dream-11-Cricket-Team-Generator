@@ -5,6 +5,8 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.enums import TA_JUSTIFY
+from reportlab.lib.styles import ParagraphStyle
+
 
 # Set up the OpenAI API client
 openai.api_key = st.secrets["openai_api_key"]
