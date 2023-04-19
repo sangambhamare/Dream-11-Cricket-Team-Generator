@@ -79,17 +79,17 @@ if project_name:
     st.header("Methodology")
     st.write(methodology)
     
-def generate_results(project_name):
-    results_prompt = f"Write the results for the project '{project_name}'."
+def generate_discussions(project_name):
+    discussions_prompt = f"Write a discussion for the project '{project_name}'."
     response = openai.Completion.create(
         engine="text-davinci-002",
-        prompt=results_prompt,
+        prompt=discussions_prompt,
         max_tokens=2048,
         n=10,
         stop=None,
         temperature=0.7,
     )
-    text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+     text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
     # remove duplicate responses
     unique_text = set(text.split("\n"))
     # join unique responses with newline character
@@ -98,6 +98,6 @@ def generate_results(project_name):
     return result
 
 if project_name:
-    results = generate_results(project_name)
-    st.header("Results")
-    st.write(results)    
+    discussions = generate_discussions(project_name)
+    st.header("Project Discussion")
+    st.write(discussions) 
