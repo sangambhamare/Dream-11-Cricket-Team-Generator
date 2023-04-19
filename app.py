@@ -89,7 +89,7 @@ def generate_discussions(project_name):
         stop=None,
         temperature=0.7,
     )
-     text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
     # remove duplicate responses
     unique_text = set(text.split("\n"))
     # join unique responses with newline character
