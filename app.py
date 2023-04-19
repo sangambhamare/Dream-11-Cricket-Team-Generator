@@ -23,7 +23,7 @@ if st.button("Generate Report"):
       engine="text-davinci-002",
       prompt=prompt,
       temperature=0.8,
-      max_tokens=20480,
+      max_tokens=4097,
       n=1,
       stop=None,
       timeout=60,
