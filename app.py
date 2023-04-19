@@ -7,7 +7,7 @@ from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.enums import TA_JUSTIFY
 
 # Connect to OpenAI API
-openai.api_key = "openai_api_key"
+openai.api_key = "YOUR_API_KEY"
 
 # Set up Streamlit app
 st.title("Mini Project Report Generator")
