@@ -42,3 +42,21 @@ if project_name:
     lit_survey = generate_lit_survey(project_name)
     st.header("Literature Survey")
     st.write(lit_survey)
+    
+    
+    def generate_methodology(project_name):
+    methodology_prompt = f"Write a methodology for the project '{project_name}'."
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=methodology_prompt,
+        max_tokens=2048,
+        n=1,
+        stop=None,
+        temperature=0.7,
+    )
+    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text + response.choices[5].text + response.choices[6].text + response.choices[7].text + response.choices[8].text + response.choices[9].text
+
+if project_name:
+    methodology = generate_methodology(project_name)
+    st.header("Methodology")
+    st.write(methodology)
