@@ -27,7 +27,7 @@ if project_name:
     
     
     def generate_lit_survey(project_name):
-    intro_prompt = f"Write an Write a literature survey for the project '{project_name}'."
+    lit_survey_prompt = f"Write an Write a literature survey for the project '{project_name}'."
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=intro_prompt,
