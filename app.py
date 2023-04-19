@@ -44,7 +44,7 @@ if project_name:
     st.write(lit_survey)
     
     
-    def generate_methodology(project_name):
+def generate_methodology(project_name):
     methodology_prompt = f"Write a methodology for the project '{project_name}'."
     response = openai.Completion.create(
         engine="text-davinci-002",
