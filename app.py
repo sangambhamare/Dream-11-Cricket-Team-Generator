@@ -20,10 +20,10 @@ if st.button("Generate Report"):
       engine="text-davinci-002",
       prompt=prompt,
       temperature=0.5,
-      max_tokens=5000,
+      max_tokens=2048,
       n=1,
       stop=None,
-      timeout=60,
+      timeout=10,
     )
     report_text = response.choices[0].text
 
