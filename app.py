@@ -26,11 +26,11 @@ if project_name:
     st.write(intro)
     
     
-    def generate_lit_survey(project_name):
-    lit_survey_prompt = f"Write an Write a literature survey for the project '{project_name}'."
+def generate_lit_survey(project_name):
+    lit_survey_prompt = f"Write a literature survey for the project '{project_name}'."
     response = openai.Completion.create(
         engine="text-davinci-002",
-        prompt=intro_prompt,
+        prompt=lit_survey_prompt,
         max_tokens=2048,
         n=10,
         stop=None,
@@ -39,6 +39,6 @@ if project_name:
     return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text + response.choices[5].text + response.choices[6].text + response.choices[7].text + response.choices[8].text + response.choices[9].text
 
 if project_name:
-    LS = generate_lit_survey(project_name)
-    st.header("Literature Survey")    
-    st.write(LS)
+    lit_survey = generate_lit_survey(project_name)
+    st.header("Literature Survey")
+    st.write(lit_survey)
