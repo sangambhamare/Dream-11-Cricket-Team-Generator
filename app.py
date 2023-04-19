@@ -22,11 +22,11 @@ if st.button("Generate Report"):
     response = openai.Completion.create(
       engine="text-davinci-002",
       prompt=prompt,
-      temperature=0.5,
-      max_tokens=2048,
+      temperature=0.8,
+      max_tokens=20480,
       n=1,
       stop=None,
-      timeout=10,
+      timeout=60,
     )
     report_text = response.choices[0].text
 
