@@ -20,6 +20,17 @@ def generate_intro(project_name):
     )
     return response.choices[0].text
 
+    intro_prompt = f"Write an introduction for the project in more than 1000 words'{project_name}'."
+    response = openai.Completion.create(
+        engine="text-davinci-002",
+        prompt=intro_prompt,
+        max_tokens=2048,
+        n=2,
+        stop=None,
+        temperature=0.7,
+    )
+    return response.choices[1].text
+
 if project_name:
     intro = generate_intro(project_name)
     st.header("Introduction")
