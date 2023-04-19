@@ -4,59 +4,47 @@ from reportlab.lib.pagesizes import letter
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph
-from io import BytesIO
+from reportlab.lib.enums import TA_JUSTIFY
 
 # Set up the OpenAI API client
 openai.api_key = st.secrets["openai_api_key"]
 
-def generate_text(prompt):
+# Set up Streamlit app
+st.title("Mini Project Report Generator")
+project_name = st.text_input("Enter a project name:")
+
+# Generate report using OpenAI API
+if st.button("Generate Report"):
+    prompt = f"Generate a mini project report for the project {project_name} with the following sections: Introduction, Literature Review, Methodology, Results, Discussion, Conclusion, References, Acknowledgements, and Appendix."
     response = openai.Completion.create(
-      engine="davinci",
+      engine="text-davinci-002",
       prompt=prompt,
-      max_tokens=1024,
+      temperature=0.5,
+      max_tokens=2048,
       n=1,
       stop=None,
-      temperature=0.5,
+      timeout=10,
     )
+    report_text = response.choices[0].text
 
-    return response.choices[0].text
-
-def create_report(project_name):
-    doc = SimpleDocTemplate(f"{project_name}.pdf", pagesize=letter)
+    # Create PDF file using reportlab
+    doc = SimpleDocTemplate("mini_project_report.pdf", pagesize=letter,
+                            rightMargin=72, leftMargin=72,
+                            topMargin=72, bottomMargin=18)
     styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
+    report = []
+    for line in report_text.split('\n'):
+        report.append(Paragraph(line, styles["Justify"]))
+        report.append(Spacer(1, 12))
+    doc.build(report)
 
-    intro = generate_text(f"Introduction for {project_name}")
-    lit_review = generate_text(f"Literature Review for {project_name}")
-    methodology = generate_text(f"Methodology for {project_name}")
-    results = generate_text(f"Results for {project_name}")
-    discussion = generate_text(f"Discussion for {project_name}")
-    conclusion = generate_text(f"Conclusion for {project_name}")
-    references = generate_text(f"References for {project_name}")
-    acknowledgement = generate_text(f"Acknowledgement for {project_name}")
-    appendix = generate_text(f"Appendix for {project_name}")
-
-    elements = []
-    elements.append(Paragraph(intro, styles["Normal"]))
-    elements.append(Paragraph(lit_review, styles["Normal"]))
-    elements.append(Paragraph(methodology, styles["Normal"]))
-    elements.append(Paragraph(results, styles["Normal"]))
-    elements.append(Paragraph(discussion, styles["Normal"]))
-    elements.append(Paragraph(conclusion, styles["Normal"]))
-    elements.append(Paragraph(references, styles["Normal"]))
-    elements.append(Paragraph(acknowledgement, styles["Normal"]))
-    elements.append(Paragraph(appendix, styles["Normal"]))
-
-    doc.build(elements)
-
-    return f"{project_name}.pdf"
-
-st.title("Mini Project Report Generator")
-
-project_name = st.text_input("Enter the project name")
-if project_name:
-    st.write("Generating report...")
-    report_filename = create_report(project_name)
-    with open(report_filename, "rb") as f:
-        pdf_data = f.read()
-    st.write("Report generated!")
-    st.download_button("Download Report", data=pdf_data, file_name=report_filename)
+    # Create download button
+    with open("mini_project_report.pdf", "rb") as f:
+        bytes_data = f.read()
+        st.download_button(
+            label="Download Report",
+            data=bytes_data,
+            file_name="mini_project_report.pdf",
+            mime="application/pdf",
+        )
