@@ -6,7 +6,8 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from io import BytesIO
 
-openai.api_key = "YOUR_API_KEY"
+# Set up the OpenAI API client
+openai.api_key = st.secrets["openai_api_key"]
 
 def generate_text(prompt):
     response = openai.Completion.create(
