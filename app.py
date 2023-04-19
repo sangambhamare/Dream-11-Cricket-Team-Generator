@@ -9,7 +9,7 @@ st.title("Mini Project Report Generator")
 project_name = st.text_input("Enter a project name:")
 
 def generate_intro(project_name):
-    intro_prompt = f"Write an introduction for the project in 1000 words'{project_name}'."
+    intro_prompt = f"Write an introduction for the project in more than 1000 words'{project_name}'."
     response = openai.Completion.create(
         engine="text-davinci-002",
         prompt=intro_prompt,
