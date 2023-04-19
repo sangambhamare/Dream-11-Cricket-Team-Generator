@@ -6,6 +6,7 @@ from reportlab.lib.units import inch
 from reportlab.platypus import SimpleDocTemplate, Paragraph
 from reportlab.lib.enums import TA_JUSTIFY
 from reportlab.lib.styles import ParagraphStyle
+from reportlab.platypus import Spacer
 
 
 # Set up the OpenAI API client
