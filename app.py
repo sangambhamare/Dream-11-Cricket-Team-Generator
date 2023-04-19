@@ -18,10 +18,8 @@ def generate_intro(project_name):
         stop=None,
         temperature=0.7,
     )
-    return response.choices[0].text
-    return response.choices[1].text
-    return response.choices[2].text
-    return response.choices[3].text
+    return response.choices[0].text + response.choices[1].text
+
 
 if project_name:
     intro = generate_intro(project_name)
