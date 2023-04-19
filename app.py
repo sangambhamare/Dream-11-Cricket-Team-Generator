@@ -42,7 +42,13 @@ def generate_lit_survey(project_name):
         stop=None,
         temperature=0.7,
     )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # remove duplicate responses
+    unique_text = set(text.split("\n"))
+    # join unique responses with newline character
+    result = "\n".join(unique_text)
+    # return result
+    return result
 
 if project_name:
     lit_survey = generate_lit_survey(project_name)
@@ -60,7 +66,13 @@ def generate_methodology(project_name):
         stop=None,
         temperature=0.7,
     )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    text= response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # remove duplicate responses
+    unique_text = set(text.split("\n"))
+    # join unique responses with newline character
+    result = "\n".join(unique_text)
+    # return result
+    return result
 
 if project_name:
     methodology = generate_methodology(project_name)
