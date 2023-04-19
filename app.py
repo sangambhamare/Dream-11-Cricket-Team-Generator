@@ -24,4 +24,4 @@ def generate_intro(project_name):
 if project_name:
     intro = generate_intro(project_name)
     st.header("Introduction")
-    st.write(intro)
+    st.write(intro, text_align="justify")
