@@ -1,50 +1,49 @@
 import streamlit as st
 import openai
-from reportlab.lib.pagesizes import letter
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.units import inch
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.enums import TA_JUSTIFY
+import weasyprint
 
-# Connect to OpenAI API
-openai.api_key = "YOUR_API_KEY"
+openai.api_key = "YOUR_API_KEY_HERE"
 
-# Set up Streamlit app
-st.title("Mini Project Report Generator")
-project_name = st.text_input("Enter a project name:")
+st.title("Mini Project Creator")
 
-# Generate report using OpenAI API
-if st.button("Generate Report"):
-    prompt = f"Generate a mini project report for the project {project_name} with the following sections: Introduction, Literature Review, Methodology, Results, Discussion, Conclusion, References, Acknowledgements, and Appendix."
-    response = openai.Completion.create(
-      engine="text-davinci-002",
-      prompt=prompt,
-      temperature=0.5,
-      max_tokens=2048,
-      n=1,
-      stop=None,
-      timeout=10,
-    )
-    report_text = response.choices[0].text
+project_name = st.text_input("Enter the name of your project:")
 
-    # Create PDF file using reportlab
-    doc = SimpleDocTemplate("mini_project_report.pdf", pagesize=letter,
-                            rightMargin=72, leftMargin=72,
-                            topMargin=72, bottomMargin=18)
-    styles = getSampleStyleSheet()
-    styles.add(ParagraphStyle(name='Justify', alignment=TA_JUSTIFY))
-    report = []
-    for line in report_text.split('\n'):
-        report.append(Paragraph(line, styles["Justify"]))
-        report.append(Spacer(1, 12))
-    doc.build(report)
+if st.button("Create Mini Project Report"):
+    st.write("Generating mini project report...")
 
-    # Create download button
-    with open("mini_project_report.pdf", "rb") as f:
-        bytes_data = f.read()
+    intro = f"Introduction:\n\nThis project aims to {project_name}."
+    lit_review = "Literature Review:\n\nWe conducted a thorough review of the existing literature in this field and found that..."
+    methodology = "Methodology:\n\nTo achieve our objectives, we used the following methodology..."
+    results = "Results:\n\nOur analysis revealed that..."
+    discussion = "Discussion:\n\nWe interpret our findings as follows..."
+    conclusion = "Conclusion:\n\nIn conclusion, our project provides valuable insights into..."
+    references = "References:\n\n1. Author 1, et al. (Year). Title. Journal.\n2. Author 2, et al. (Year). Title. Journal."
+    acknowledgement = "Acknowledgement:\n\nWe would like to express our gratitude to..."
+
+    report = intro + "\n\n" + lit_review + "\n\n" + methodology + "\n\n" + results + "\n\n" + discussion + "\n\n" + conclusion + "\n\n" + references + "\n\n" + acknowledgement
+
+    try:
+        generated_text = openai.Completion.create(
+            engine="text-davinci-002",
+            prompt=f"Generate a mini project report for a project titled '{project_name}' using the following structure:\n\n{report}",
+            temperature=0.5,
+            max_tokens=1024,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
+        ).choices[0].text
+
+        st.write("Mini project report generated successfully!")
+        st.write("Exporting report to PDF...")
+
+        pdf = weasyprint.HTML(string=generated_text).write_pdf()
+
         st.download_button(
-            label="Download Report",
-            data=bytes_data,
-            file_name="mini_project_report.pdf",
-            mime="application/pdf",
+            label="Download PDF",
+            data=pdf,
+            file_name=f"{project_name}_report.pdf",
+            mime="application/pdf"
         )
+    except Exception as e:
+        st.error("Error generating mini project report.")
+        st.error(str(e))
