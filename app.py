@@ -24,5 +24,12 @@ def generate_intro(project_name):
 if project_name:
     intro = generate_intro(project_name)
     st.header("Introduction")
-    st.write(f"<p style='text-align: justify'>{intro}</p>", unsafe_allow_html=True)
+    
+    #st.write(f"<p style='text-align: justify'>{intro}</p>", unsafe_allow_html=True)
+    
+    # Apply CSS styling to align text to both left and right margin
+    styled_text = f"<p style='text-align: justify;'>{intro}</p>"
+    # Display the styled text using st.markdown
+    st.markdown(styled_text, unsafe_allow_html=True)
+    
     #st.write(intro)
