@@ -1,49 +1,61 @@
 import streamlit as st
 import openai
-import weasyprint
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Paragraph
+from io import BytesIO
 
-openai.api_key = "YOUR_API_KEY_HERE"
+openai.api_key = "YOUR_API_KEY"
 
-st.title("Mini Project Creator")
+def generate_text(prompt):
+    response = openai.Completion.create(
+      engine="davinci",
+      prompt=prompt,
+      max_tokens=1024,
+      n=1,
+      stop=None,
+      temperature=0.5,
+    )
 
-project_name = st.text_input("Enter the name of your project:")
+    return response.choices[0].text
 
-if st.button("Create Mini Project Report"):
-    st.write("Generating mini project report...")
+def create_report(project_name):
+    doc = SimpleDocTemplate(f"{project_name}.pdf", pagesize=letter)
+    styles = getSampleStyleSheet()
 
-    intro = f"Introduction:\n\nThis project aims to {project_name}."
-    lit_review = "Literature Review:\n\nWe conducted a thorough review of the existing literature in this field and found that..."
-    methodology = "Methodology:\n\nTo achieve our objectives, we used the following methodology..."
-    results = "Results:\n\nOur analysis revealed that..."
-    discussion = "Discussion:\n\nWe interpret our findings as follows..."
-    conclusion = "Conclusion:\n\nIn conclusion, our project provides valuable insights into..."
-    references = "References:\n\n1. Author 1, et al. (Year). Title. Journal.\n2. Author 2, et al. (Year). Title. Journal."
-    acknowledgement = "Acknowledgement:\n\nWe would like to express our gratitude to..."
+    intro = generate_text(f"Introduction for {project_name}")
+    lit_review = generate_text(f"Literature Review for {project_name}")
+    methodology = generate_text(f"Methodology for {project_name}")
+    results = generate_text(f"Results for {project_name}")
+    discussion = generate_text(f"Discussion for {project_name}")
+    conclusion = generate_text(f"Conclusion for {project_name}")
+    references = generate_text(f"References for {project_name}")
+    acknowledgement = generate_text(f"Acknowledgement for {project_name}")
+    appendix = generate_text(f"Appendix for {project_name}")
 
-    report = intro + "\n\n" + lit_review + "\n\n" + methodology + "\n\n" + results + "\n\n" + discussion + "\n\n" + conclusion + "\n\n" + references + "\n\n" + acknowledgement
+    elements = []
+    elements.append(Paragraph(intro, styles["Normal"]))
+    elements.append(Paragraph(lit_review, styles["Normal"]))
+    elements.append(Paragraph(methodology, styles["Normal"]))
+    elements.append(Paragraph(results, styles["Normal"]))
+    elements.append(Paragraph(discussion, styles["Normal"]))
+    elements.append(Paragraph(conclusion, styles["Normal"]))
+    elements.append(Paragraph(references, styles["Normal"]))
+    elements.append(Paragraph(acknowledgement, styles["Normal"]))
+    elements.append(Paragraph(appendix, styles["Normal"]))
 
-    try:
-        generated_text = openai.Completion.create(
-            engine="text-davinci-002",
-            prompt=f"Generate a mini project report for a project titled '{project_name}' using the following structure:\n\n{report}",
-            temperature=0.5,
-            max_tokens=1024,
-            top_p=1,
-            frequency_penalty=0,
-            presence_penalty=0
-        ).choices[0].text
+    doc.build(elements)
 
-        st.write("Mini project report generated successfully!")
-        st.write("Exporting report to PDF...")
+    return f"{project_name}.pdf"
 
-        pdf = weasyprint.HTML(string=generated_text).write_pdf()
+st.title("Mini Project Report Generator")
 
-        st.download_button(
-            label="Download PDF",
-            data=pdf,
-            file_name=f"{project_name}_report.pdf",
-            mime="application/pdf"
-        )
-    except Exception as e:
-        st.error("Error generating mini project report.")
-        st.error(str(e))
+project_name = st.text_input("Enter the project name")
+if project_name:
+    st.write("Generating report...")
+    report_filename = create_report(project_name)
+    with open(report_filename, "rb") as f:
+        pdf_data = f.read()
+    st.write("Report generated!")
+    st.download_button("Download Report", data=pdf_data, file_name=report_filename)
