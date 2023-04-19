@@ -50,7 +50,7 @@ def generate_methodology(project_name):
         engine="text-davinci-002",
         prompt=methodology_prompt,
         max_tokens=2048,
-        n=1,
+        n=10,
         stop=None,
         temperature=0.7,
     )
