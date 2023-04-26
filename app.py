@@ -17,4 +17,4 @@ if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     cartoon = cartoonify_image(image)
-    st.image([image, cartoon], caption=["Original Image", "Cartoonified Image"], width=500)    
+    st.image([image, cartoon], caption=["Original Image", "Cartoonified Image"], width=500)   
