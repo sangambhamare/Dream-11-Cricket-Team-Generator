@@ -4,8 +4,8 @@ import cv2
 
 st.title("Cartoonify Your Image")
         
-def cartoonify_image(image):
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def cartoonify_image(uploaded_file):
+    gray = cv2.cvtColor(uploaded_file, cv2.COLOR_BGR2GRAY)
     gray = cv2.medianBlur(gray, 5)
     edges = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 5, 5)
     color = cv2.bilateralFilter(image, 9, 30, 30)
