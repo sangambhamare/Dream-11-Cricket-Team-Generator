@@ -20,8 +20,17 @@ if uploaded_file is not None:
     # Apply Canny edge detection algorithm to extract the outlines
     edges = cv2.Canny(gray, 100, 200)
 
-    # Convert the edges to 3 channels
+    # Create a white background image
+    white = np.zeros_like(image)
+    white.fill(255)
+
+    # Invert the edges and convert to 3 channels
+    edges = cv2.bitwise_not(edges)
     edges = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+
+    # Copy the original image onto the white background, using the edges as a mask
+    result = np.where(edges != 0, edges, white)
+    result = cv2.bitwise_and(image, result)
 
     # Display the original and outline images
     col1, col2 = st.columns(2)
@@ -29,4 +38,4 @@ if uploaded_file is not None:
     col1.image(image, channels="BGR")
 
     col2.subheader("Outline Image")
-    col2.image(edges, channels="BGR")
+    col2.image(result, channels="BGR")
