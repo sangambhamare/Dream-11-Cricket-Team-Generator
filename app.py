@@ -2,6 +2,8 @@ import streamlit as st
 import numpy as np
 import cv2
         
+# Set page icon and title
+st.set_page_config(page_title='Cartoonify Image', page_icon=':cartoon:')        
 st.title("Cartoonify Your Image")
 
 # Upload image
