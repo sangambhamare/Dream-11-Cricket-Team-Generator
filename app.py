@@ -18,5 +18,4 @@ if uploaded_file is not None:
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     cartoon = cartoonify_image(image)
     st.image([cartoon], caption=["Cartoonified Image"], width=400)
-    return uploaded_file
 
