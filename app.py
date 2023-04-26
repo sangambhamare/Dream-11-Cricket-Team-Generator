@@ -17,4 +17,17 @@ if uploaded_file is not None:
     file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
     image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
     cartoon = cartoonify_image(image)
-    st.image([image, cartoon], caption=["Original Image", "Cartoonified Image"], width=500)   
+    st.image([image, cartoon], caption=["Original Image", "Cartoonified Image"], width=500)
+
+st.title("Smooth Your Image")        
+        
+def smooth_image(image):
+    smoothed = cv2.GaussianBlur(image, (5, 5), 0)
+    return smoothed
+
+#uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+if uploaded_file is not None:
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, cv2.IMREAD_COLOR)
+    smoothed = smooth_image(image)
+    st.image([image, smoothed], caption=["Original Image", "Smoothed Image"], width=500)
