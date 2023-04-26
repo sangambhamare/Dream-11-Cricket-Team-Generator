@@ -1,80 +1,35 @@
 import streamlit as st
-import openai
+import cv2
 
-# Set up the OpenAI API client
-openai.api_key = st.secrets["openai_api_key"]
+st.title("Cartoonify Your Image")
 
-# Set up Streamlit app
-st.title("Mini Project Report Generator")
-project_name = st.text_input("Enter a project name:")
+# Function to cartoonify the image
+def cartoonify_image(image):
+    # Convert the image to grayscale
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-def generate_intro(project_name):
-    intro_prompt = f"Write an introduction for the project'{project_name}'."
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=intro_prompt,
-        max_tokens=2048,
-        n=10,
-        stop=None,
-        temperature=0.7,
-    )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # Apply median blur to smoothen the image
+    gray = cv2.medianBlur(gray, 5)
 
-    
-if project_name:
-    intro = generate_intro(project_name)
-    st.header("Introduction")    
-    st.write(intro)
-    
-    
-def generate_lit_survey(project_name):
-    lit_survey_prompt = f"Write a literature survey for the project '{project_name}'."
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=lit_survey_prompt,
-        max_tokens=2048,
-        n=10,
-        stop=None,
-        temperature=0.7,
-    )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # Detect edges in the image using adaptive thresholding
+    edges = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
 
-if project_name:
-    lit_survey = generate_lit_survey(project_name)
-    st.header("Literature Survey")
-    st.write(lit_survey)
-    
-    
-def generate_methodology(project_name):
-    methodology_prompt = f"Write a methodology for the project '{project_name}'."
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=methodology_prompt,
-        max_tokens=2048,
-        n=10,
-        stop=None,
-        temperature=0.7,
-    )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # Apply bilateral filter to the image to reduce noise while preserving edges
+    color = cv2.bilateralFilter(image, 9, 250, 250)
 
-if project_name:
-    methodology = generate_methodology(project_name)
-    st.header("Methodology")
-    st.write(methodology)
-    
-def generate_discussions(project_name):
-    discussions_prompt = f"Write a discussion for the project '{project_name}'."
-    response = openai.Completion.create(
-        engine="text-davinci-002",
-        prompt=discussions_prompt,
-        max_tokens=2048,
-        n=10,
-        stop=None,
-        temperature=0.7,
-    )
-    return response.choices[0].text + response.choices[1].text + response.choices[2].text + response.choices[3].text + response.choices[4].text
+    # Combine the color and edges to get the cartoon effect
+    cartoon = cv2.bitwise_and(color, color, mask=edges)
 
-if project_name:
-    discussions = generate_discussions(project_name)
-    st.header("Project Discussion")
-    st.write(discussions) 
+    return cartoon
+
+# Streamlit app code
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
+if uploaded_file is not None:
+    # Read the uploaded image using OpenCV
+    image = cv2.imdecode(np.fromstring(uploaded_file.read(), np.uint8), 1)
+
+    # Call the cartoonify_image function to get the cartoonified image
+    cartoon = cartoonify_image(image)
+
+    # Display the original and cartoonified image
+    st.image([image, cartoon], caption=["Original Image", "Cartoonified Image"], width=500)
