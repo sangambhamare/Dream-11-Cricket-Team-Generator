@@ -35,3 +35,5 @@ if uploaded_file is not None:
     with col2:
         st.header("Cartoon Image")
         st.image(output, channels="BGR")
+        
+    st.code("© Developed by Mr. Sangam Bhamare & SQUAD. All rights reserved.")
