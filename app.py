@@ -1,49 +1,35 @@
 import streamlit as st
 import numpy as np
 import cv2
-
-st.title("Clean your Image")
         
-st.set_option('deprecation.showfileUploaderEncoding', False)
+st.title("Cartoonify Your Image")
 
-# Upload an image file
-uploaded_file = st.file_uploader("Choose an image file", type=["jpg", "jpeg", "png"])
-
+# Upload image
+uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
 if uploaded_file is not None:
-    # Load the uploaded image
-    image = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-    image = cv2.imdecode(image, cv2.IMREAD_COLOR)
+    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
+    image = cv2.imdecode(file_bytes, 1)
 
-    # Convert the image to grayscale
+    # Convert image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-    # Apply bilateral filter to smooth the grayscale image
-    smooth = cv2.bilateralFilter(gray, 9, 75, 75)
+    # Smoothen the grayscale image
+    gray = cv2.medianBlur(gray, 5)
 
-    # Extract edges from the smoothed image using Canny edge detection algorithm
-    edges = cv2.Canny(smooth, 100, 200)
+    # Retrieve edges of the image
+    edges = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
 
-    # Create a mask by applying a threshold to the edges
-    mask = cv2.threshold(edges, 50, 255, cv2.THRESH_BINARY_INV)[1]
+    # Prepare mask of the image
+    color = cv2.bilateralFilter(image, 9, 250, 250)
+    mask = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
+    output = cv2.bitwise_and(color, mask)
 
-    # Apply a bilateral filter to the original image to reduce noise and preserve edges
-    cartoon = cv2.bilateralFilter(image, 9, 250, 250)
+    # Display the original and processed images
+    col1, col2 = st.beta_columns(2)
+    with col1:
+        st.header("Original Image")
+        st.image(image, channels="BGR")
 
-    # Apply the mask to the cartoon image to reveal only the edges
-    cartoon = cv2.bitwise_and(cartoon, cartoon, mask=mask)
-
-    # Display the original image, grayscale image, smoothed image, edges, and cartoon image
-    st.subheader("Original Image")
-    st.image(image, channels="BGR")
-
-    st.subheader("Grayscale Image")
-    st.image(gray, channels="GRAY")
-
-    st.subheader("Smoothed Image")
-    st.image(smooth, channels="GRAY")
-
-    st.subheader("Edges")
-    st.image(edges, channels="GRAY")
-
-    st.subheader("Cartoon Image")
-    st.image(cartoon, channels="BGR")
+    with col2:
+        st.header("Cartoon Image")
+        st.image(output, channels="BGR")
