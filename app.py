@@ -4,6 +4,7 @@ import cv2
 
 st.title("Clean your Image")
         
+
 st.set_option('deprecation.showfileUploaderEncoding', False)
 
 # Upload an image file
@@ -34,4 +35,9 @@ if uploaded_file is not None:
     th = cv2.cvtColor(th, cv2.COLOR_GRAY2BGR)  # Convert to 3 channels
 
     # Display the original and processed images
-    st.image(np.hstack((image, th)), channels="BGR")
+    col1, col2 = st.beta_columns(2)
+    col1.subheader("Original Image")
+    col1.image(image, channels="BGR")
+
+    col2.subheader("Processed Image")
+    col2.image(th, channels="BGR")
