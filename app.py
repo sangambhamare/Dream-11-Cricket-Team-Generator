@@ -3,7 +3,7 @@ import numpy as np
 import cv2
         
 # Set page icon and title
-st.set_page_config(page_title='Cartoonify Image', page_icon=':cartoon:')        
+st.set_page_config(page_title='Cartoonify Image', page_icon=':colors:')        
 st.title("Cartoonify Your Image")
 
 # Upload image
