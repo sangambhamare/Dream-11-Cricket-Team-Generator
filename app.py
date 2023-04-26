@@ -25,7 +25,7 @@ if uploaded_file is not None:
     output = cv2.bitwise_and(color, mask)
 
     # Display the original and processed images
-    col1, col2 = st.beta_columns(2)
+    col1, col2 = st.columns(2)
     with col1:
         st.header("Original Image")
         st.image(image, channels="BGR")
