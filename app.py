@@ -29,11 +29,11 @@ if uploaded_file is not None:
     # Display the original and processed images
     col1, col2 = st.columns(2)
     with col1:
-        st.header("Original Image")
+        st.write("Original Image")
         st.image(image, channels="BGR")
 
     with col2:
-        st.header("Cartoon Image")
+        st.write("Cartoon Image")
         st.image(output, channels="BGR")
         
     st.code("© Developed by Mr. Sangam Bhamare & SQUAD. All rights reserved.")
