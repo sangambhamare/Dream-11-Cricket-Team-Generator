@@ -33,9 +33,8 @@ if uploaded_file is not None:
     result = cv2.bitwise_and(image, result)
 
     # Display the original and outline images
-    col1, col2 = st.columns(2)
-    col1.subheader("Original Image")
-    col1.image(image, channels="BGR")
+    st.subheader("Original Image")
+    st.image(image, channels="BGR")
 
-    col2.subheader("Outline Image")
-    col2.image(result, channels="BGR")
+    st.subheader("Outline Image")
+    st.image(result, channels="BGR")
