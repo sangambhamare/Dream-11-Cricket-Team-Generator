@@ -23,7 +23,7 @@ st.title('Dream11 Team Generator')
 players = st.text_input('Enter the list of players (separated by commas)')
 
 # Input the number of teams to generate
-num_teams = st.slider('Number of teams', 1, 100, 10)
+num_teams = st.slider('Number of teams', 1, 1000, 10)
 
 if st.button('Generate Teams'):
     players_list = players.split(',')
