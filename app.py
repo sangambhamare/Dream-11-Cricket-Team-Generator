@@ -32,7 +32,7 @@ if st.button('Generate Teams'):
     # Display the teams in a table
     for i in range(num_teams):
         st.write(f'Team {i+1}')
-        columns = st.beta_columns(11)
+        columns = st.columns(11)
         for j, player in enumerate(teams[i]):
             if isinstance(player, tuple):
                 columns[j].write(f'{player[0]}: {player[1]}')
