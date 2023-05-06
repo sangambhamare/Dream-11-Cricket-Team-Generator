@@ -38,3 +38,5 @@ if st.button('Generate Teams'):
                 columns[j].write(f'{player[0]}: {player[1]}')
             else:
                 columns[j].write(player)
+                
+    st.code("© Developed by Mr. Sangam Bhamare & SQUAD. All rights reserved.")
