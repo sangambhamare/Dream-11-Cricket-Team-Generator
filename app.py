@@ -1,39 +1,40 @@
 import streamlit as st
-import numpy as np
-import cv2
-        
-# Set page icon and title
-st.set_page_config(page_title='Cartoonify Image', page_icon=':sunglasses:')        
-st.title("Cartoonify Your Image")
+from itertools import combinations
 
-# Upload image
-uploaded_file = st.file_uploader("Choose an image...", type=["jpg", "jpeg", "png"])
-if uploaded_file is not None:
-    file_bytes = np.asarray(bytearray(uploaded_file.read()), dtype=np.uint8)
-    image = cv2.imdecode(file_bytes, 1)
+def generate_teams(players, num_teams):
+    teams = []
+    for c in combinations(players, 11):
+        for vc in combinations(c, 1):
+            for cap in combinations(c, 1):
+                if vc != cap:
+                    team = list(c)
+                    team.remove(vc[0])
+                    team.remove(cap[0])
+                    team.append(('VC', vc[0]))
+                    team.append(('C', cap[0]))
+                    teams.append(team)
+        if len(teams) >= num_teams:
+            break
+    return teams[:num_teams]
 
-    # Convert image to grayscale
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+st.title('Dream11 Team Generator')
 
-    # Smoothen the grayscale image
-    gray = cv2.medianBlur(gray, 5)
+# Input the list of players
+players = st.text_input('Enter the list of players (separated by commas)')
 
-    # Retrieve edges of the image
-    edges = cv2.adaptiveThreshold(gray, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 9, 9)
+# Input the number of teams to generate
+num_teams = st.slider('Number of teams', 1, 100, 10)
 
-    # Prepare mask of the image
-    color = cv2.bilateralFilter(image, 9, 250, 250)
-    mask = cv2.cvtColor(edges, cv2.COLOR_GRAY2BGR)
-    output = cv2.bitwise_and(color, mask)
+if st.button('Generate Teams'):
+    players_list = players.split(',')
+    teams = generate_teams(players_list, num_teams)
 
-    # Display the original and processed images
-    col1, col2 = st.columns(2)
-    with col1:
-        st.write("Original Image")
-        st.image(image, channels="BGR")
-
-    with col2:
-        st.write("Cartoon Image")
-        st.image(output, channels="BGR")
-        
-    st.code("© Developed by Mr. Sangam Bhamare & SQUAD. All rights reserved.")
+    # Display the teams in a table
+    for i in range(num_teams):
+        st.write(f'Team {i+1}')
+        columns = st.beta_columns(11)
+        for j, player in enumerate(teams[i]):
+            if isinstance(player, tuple):
+                columns[j].write(f'{player[0]}: {player[1]}')
+            else:
+                columns[j].write(player)
