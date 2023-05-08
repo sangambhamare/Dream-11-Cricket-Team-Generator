@@ -18,7 +18,6 @@ def generate_teams(players, num_teams):
     return teams[:num_teams]
 
 st.title('Dream11 Team Generator')
-st.header("Sangam Bhamare")
 
 # Input the list of players
 players = st.text_input('Enter the list of players (separated by commas)')
